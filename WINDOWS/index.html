@@ -1,0 +1,164 @@
+<!doctype html>
+<!--script loads the Google Maps API. The key parameter contains unique Google Maps API Key.-->
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPkbE2sGnWiv7adu7WTYqmgYnGRvog3qg">
+</script>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Belfast Smart City</title>
+    <style>
+        img {
+            height: 100px;
+            float: left;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+
+    <!--Bootstrap CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+
+
+</head>
+
+
+<body>
+<!--wrapper for entire page-->
+<div class="wrapper">
+    <header>
+        <h1>ARC - Making Belfast A Smarter City</h1>
+    </header>
+    <!-- //Reserve a spot on the page for the map. CSS used to set map div width to 100%-->
+    <div id="map" style="width:100%;height:600px">
+    </div>
+<!--button groups -->
+    <div class="buttonsGroup1">
+        <input class="btn btn-primary center-block" type="button" onclick="pm25()" value="PM2.5">
+        <input class="btn btn-primary center-block" type="button" onclick="pm10()" value="PM10">
+        <input class="btn btn-primary center-block" type="button" onclick="deleteZone()" value="Hide Zones">
+        <input class="btn btn-primary center-block" onclick="clearMarkers();" type=button value="Hide Markers">
+        <input class="btn btn-primary center-block" onclick="showMarkers();" type=button value="Show All Markers">
+    </div>
+    <div class="buttonsGroup2">
+        <button class="btn btn-primary center-block" class="btn btn-primary center-block" id="traffic-b">Traffic
+        </button>
+        <button class="btn btn-primary center-block" id="bike-b">Bike</button>
+    </div>
+
+<!--Legend-->
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+
+                <th>Pollution Levels PM2.5 (µg/m3)</th>
+                <th>Congestion Charge (&pound;)</th>
+                <th>Public Transport Discount (%)</th>
+                <th>Pollution Levels PM10 (µg/m3)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-danger">
+                <!--<td></td>-->
+                <td>20+</td>
+                <td>10</td>
+                <td>75</td>
+                <td>40+</td>
+            </tr>
+            <tr class="table-warning">
+                <!--<td></td>-->
+                <td>10-19</td>
+                <td>5</td>
+                <td>50</td>
+                <td>20-39</td>
+            </tr>
+            <tr class="table-success">
+                <!--<td></td>-->
+                <td>0-9</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0-19</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+<!--Info boxes-->
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card">
+            <div class="card-header" role="tab" id="headingOne">
+                <h5 class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                       aria-controls="collapseOne">
+                        About
+                    </a>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                <div class="card-block">
+                    The map defines three congestion zones in Belfast. Pollution levels are recovered in two categories.
+                    PM2.5 is emitted from vehicle fumes and is hazardous to our health. PM10 is caused by general dust
+                    particles found in the air and is less hazardous to our health. <b>A vehicle user is charged based on
+                    the levels of PM2.5 only.</b> The pollution level is recorded and assigned a colour (red, amber or
+                    green) based on an agreed threshold of pollution volume. Charges are aligned to these colours,
+                    detailed in the attached table. These zones are being up-dated in real time.
+                    Individual sensors readings are available by clicking on the markers.
+                    Historical data is available to provide users with a backlog of pollution trends over time.
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" role="tab" id="headingTwo">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                       aria-expanded="false" aria-controls="collapseTwo">
+                        Information
+                    </a>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="card-block">
+                    This software system, is an example of how Belfast can become a smarter city. Air quality is collected and displayed in real time by sensors.  The Development team of Ciarán McKenna, Richard Murphy and Alistair Spence, completed this project
+                    for the software company Aepona. This web application fulfils the criteria required for a successful
+                    submission of MSc Software Development Module CSC7057, September 2017.
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Containers for Highcharts to be placed -->
+    <div class="containers">
+        <div class="container" id="container1"></div>
+        <div class="container" id="container2"></div>
+    </div>
+
+
+    <footer>
+        <h2>Contact us: <a href="mailto:arc@aepona.com">arc@aepona.com</a></h2>
+    </footer>
+</div>
+
+<!-- call to get scripts -->
+<script src="variables.js"></script>
+<script src="onLoad.js"></script>
+<script src="InitMap.js"></script>
+<script src="getData.js"></script>
+<script src="zoneBuilder.js"></script>
+<script src="Highcharts.js"></script>
+<script src="utilityFunctions.js"></script>
+
+
+</body>
+
+</html>

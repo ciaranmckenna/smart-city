@@ -1,0 +1,1 @@
+-If you want to excute createDeviceReadings on Windows or Mac, then you need to replace createDeviceReadings.ini file with smartCitiesConfig.ini file
